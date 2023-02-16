@@ -6,13 +6,13 @@ using TMPro;
 public class Items : MonoBehaviour
 {
     [SerializeField] private TMP_Text infoText;
-    [SerializeField] ScriptableObject SO;
+    [SerializeField] public ItemSO SO;
 
 
     private void Start()
     {
         infoText.text = $"{gameObject.name}" + "\n (pick up with e)";
-
+        
 
         infoText.gameObject.SetActive(false);
     }
@@ -28,6 +28,7 @@ public class Items : MonoBehaviour
   
     public void DestroyThis()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
+
 }

@@ -20,6 +20,9 @@ public class PlayerController : MonoBehaviour
 
     public bool IsItemInRange;
 
+    public delegate void ItemToInventoryRegister(Items item);
+    public static event ItemToInventoryRegister InventoryUpdate;
+
     Vector2 moveInput;
     Vector2 lookInput;
     float sprintInput;
@@ -62,7 +65,7 @@ public class PlayerController : MonoBehaviour
          {
             
             Collider colliderObj = hit.collider;
-            Debug.Log($"{colliderObj.gameObject.name}, ITEM IS HIT");
+          
 
             if(colliderObj.tag == "Item")
             {
@@ -71,7 +74,11 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetKey(KeyCode.E))
                 {
                     animator.SetTrigger("PickUp");
-                    colliderObj.gameObject.GetComponentInParent<Items>().DestroyThis();
+                    InventoryUpdate(colliderObj.gameObject.GetComponentInParent<Items>());
+                
+
+              
+                
                     
                 }
             }
