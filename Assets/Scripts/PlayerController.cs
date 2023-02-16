@@ -6,12 +6,18 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] Camera MainCam;
     [SerializeField] float rotationPower = 3f;
     [SerializeField] float walkSpeed = 1f;
     [SerializeField] float sprintSpeed = 3f;
     [SerializeField] Transform followTransform;
     [SerializeField] Animator animator;
     [SerializeField] Rigidbody rigidbody;
+    public LayerMask itemMask, playerMask;
+    public List<GameObject> items;
+
+
+    public bool IsItemInRange;
 
     Vector2 moveInput;
     Vector2 lookInput;
@@ -19,7 +25,8 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Confined;
+        
     }
 
     private void FixedUpdate()
@@ -29,7 +36,25 @@ public class PlayerController : MonoBehaviour
         sprintInput = Input.GetAxis("Sprint");
 
         UpdateFollowTargetRotation();
-
+       // foreach (GameObject item in items)
+       // {
+       //
+       //
+       //     IsItemInRange = Physics.CheckSphere(transform.position, 2, itemMask);
+       //
+       //
+       //     if (IsItemInRange)
+       //     {
+       //
+       //         
+       //
+       //        
+       //     }
+       //     else
+       //     {
+       //         item.GetComponent<Items>().HideInfo();
+       //     }
+       // }
         float speed = 0;
 
         speed = Mathf.Lerp(walkSpeed, sprintSpeed, sprintInput);
@@ -46,6 +71,35 @@ public class PlayerController : MonoBehaviour
             //reset the y rotation of the look transform
             followTransform.localEulerAngles = new Vector3(followTransform.localEulerAngles.x, 0, 0);
         }
+
+        Ray ray = MainCam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+         if (Physics.Raycast(ray, out hit, itemMask))
+         {
+            
+            Collider colliderObj = hit.collider;
+            Debug.Log($"{colliderObj.gameObject.name}, ITEM IS HIT");
+
+            if(colliderObj.tag == "Item")
+            {
+                StartCoroutine(colliderObj.gameObject.GetComponentInParent<Items>().DisplayInfo());
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+
+                    colliderObj.gameObject.GetComponentInParent<Items>().DestroyThis();
+                    
+                }
+
+            }
+
+           
+         }
+    
+     
+
+
     }
 
     private void UpdateFollowTargetRotation()
@@ -68,6 +122,12 @@ public class PlayerController : MonoBehaviour
             angles.x = 40;
         }
         followTransform.localEulerAngles = angles;
+    }
+
+    private void PickUpItem()
+    {
+        
+       
     }
 
 
