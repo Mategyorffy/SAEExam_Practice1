@@ -6,6 +6,8 @@ using TMPro;
 public class Items : MonoBehaviour
 {
     [SerializeField] private TMP_Text infoText;
+    [SerializeField] ScriptableObject SO;
+
 
     private void Start()
     {
