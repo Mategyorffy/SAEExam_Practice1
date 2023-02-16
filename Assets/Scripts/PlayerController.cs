@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Rigidbody rigidbody;
     public LayerMask itemMask, playerMask;
     public List<GameObject> items;
+    public Canvas invetoryCanvas;
 
 
     public bool IsItemInRange;
@@ -36,25 +37,7 @@ public class PlayerController : MonoBehaviour
         sprintInput = Input.GetAxis("Sprint");
 
         UpdateFollowTargetRotation();
-       // foreach (GameObject item in items)
-       // {
-       //
-       //
-       //     IsItemInRange = Physics.CheckSphere(transform.position, 2, itemMask);
-       //
-       //
-       //     if (IsItemInRange)
-       //     {
-       //
-       //         
-       //
-       //        
-       //     }
-       //     else
-       //     {
-       //         item.GetComponent<Items>().HideInfo();
-       //     }
-       // }
+     
         float speed = 0;
 
         speed = Mathf.Lerp(walkSpeed, sprintSpeed, sprintInput);
@@ -85,22 +68,18 @@ public class PlayerController : MonoBehaviour
             {
                 StartCoroutine(colliderObj.gameObject.GetComponentInParent<Items>().DisplayInfo());
 
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKey(KeyCode.E))
                 {
-
+                    animator.SetTrigger("PickUp");
                     colliderObj.gameObject.GetComponentInParent<Items>().DestroyThis();
                     
                 }
-
             }
-
-           
          }
-    
-     
 
-
+        DisplayInventory();
     }
+
 
     private void UpdateFollowTargetRotation()
     {
@@ -124,11 +103,22 @@ public class PlayerController : MonoBehaviour
         followTransform.localEulerAngles = angles;
     }
 
-    private void PickUpItem()
+    public void DisplayInventory()
     {
-        
-       
+
+        if (Input.GetKey(KeyCode.Tab))
+        {
+           
+            invetoryCanvas.gameObject.SetActive(true);
+        }
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            
+            invetoryCanvas.gameObject.SetActive(false);
+        }
+
     }
+
 
 
 }
